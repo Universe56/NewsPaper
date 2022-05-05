@@ -1,0 +1,48 @@
+CREATE TABLE AUTHOR (
+    author_id INT AUTO_INCREMENT NOT NULL,
+    author_name CHAR(40) NOT NULL, #cвязь «один к одному» с встроенной моделью пользователей User;
+    author_rating FLOAT NOT NULL, #рейтинг пользователя.
+
+    PRIMARY KEY (author_id)
+);
+
+CREATE TABLE CATEGORY (
+    cat_id INT AUTO_INCREMENT NOT NULL,
+    cat_name CHAR(40) NOT NULL, #Имеет единственное поле: название категории.
+
+    PRIMARY KEY (cat_id)
+);
+
+CREATE TABLE POST (
+    post_id INT AUTO_INCREMENT NOT NULL,
+    post_type INT NOT NULL,
+    time_pub DATETIME NOT NULL,
+    post_title TEXT NOT NULL,
+    post_body TEXT NOT NULL,
+    post_rating FLOAT NOT NULL,
+    author INT NOT NULL,
+    category INT NOT NULL,
+
+    PRIMARY KEY (post_id),
+    FOREIGN KEY (author) REFERENCES AUTHOR (author_id), #связь «один ко многим» с моделью Author;
+);
+
+CREATE TABLE POST_CATEGORY (
+    post INT NOT NULL,
+    category INT NOT NULL,
+
+    FOREIGN KEY (post) REFERENCES POST (post_id), #связь «один ко многим» с моделью Post;
+    FOREIGN KEY (category) REFERENCES CATEGORY (cat_id) #связь «один ко многим» с моделью Category;
+);
+
+CREATE TABLE COMMENT (
+    comment_id INT AUTO_INCREMENT NOT NULL,
+    comment_body TEXT NOT NULL, #текст комментария;
+    comment_time DATETIME NOT NULL, #дата и время создания комментария;
+    comment_rating FLOAT NOT NULL, #рейтинг комментария.
+    post INT NOT NULL,
+
+    PRIMARY KEY (comment_id),
+    FOREIGN KEY (post) REFERENCES POST (post_id), #связь «один ко многим» с моделью Post;
+    #связь «один ко многим» со встроенной моделью User
+);
